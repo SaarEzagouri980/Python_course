@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -5,7 +6,6 @@ from sklearn import preprocessing
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
-#import shap
 ## classifiers ##
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
@@ -18,8 +18,11 @@ from sklearn.metrics import roc_auc_score
 from sklearn.metrics import roc_curve
 
 #### Data filtering by criteria for Cachexia
-df_b = pd.read_excel(r'', sheet_name=0) # WRITE PATH TO DATAFILE1 HERE
-df = pd.read_excel(r'', sheet_name=0) # WRITE PATH TO DATAFILE2 HERE
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname)
+df_b = pd.read_excel(r'data1.xlsx', sheet_name=0) 
+df = pd.read_excel(r'data2.xlsx', sheet_name=0)
 filter_bmi = df[(df['BMI Base Line-Weight'].notnull()) & (df['BMI Minimum-Weight'].notnull()) & (df['BMI Base Line-Measurement date']!= df['BMI Minimum-Measurement date'])] ## filter for patients who has 2 weight measurements that are not the same!
 weightloss = (filter_bmi['BMI Minimum-Weight'] / filter_bmi ['BMI Base Line-Weight'])*100
 cachh = filter_bmi[(filter_bmi['BMI Minimum-Weight'] / filter_bmi ['BMI Base Line-Weight']<=0.98) & (filter_bmi['BMI Base Line-BMI']<=20) | ((filter_bmi['BMI Minimum-Weight'] / filter_bmi ['BMI Base Line-Weight'])<=0.98) & (filter_bmi['BMI Minimum-BMI']<=20)]
